@@ -59,54 +59,6 @@ The action has the following outputs:
 | `branch` | Branch name |
 | `summary` | A summary of the action: (`built`, `re-built`, or `cached`) |
 
-
-## Example: using the Azure container registry
-It is possible to log in by providing an explicit azure container registry username and password, but for CFA use we recommend a service principal-mediated login approach on a self-hosted runner. Here is an example, based on a [real workflow](https://github.com/CDCgov/pyrenew-hew/blob/main/.github/workflows/containers.yaml) from the [`pyrenew-hew`](https://github.com/cdcgov/pyrenew-hew) repo. You'll first need to create a valid [creds string](https://github.com/Azure/login?tab=readme-ov-file#creds) for your Azure Service Principal and store it as a repo secret. In this example, we've named the secret `MY_SERVICE_PRINCIPAL_CREDS_STRING`.
-
-```yaml
-name: Create Docker Image
-
-on:
-  push:
-    branches: [main]
-  pull_request:
-  workflow_dispatch:
-
-env:
-  IMAGE_NAME: example-image-name
-  CONTAINER_REGISTRY_NAME: myacrregistry
-
-jobs:
-
-  build-and-push-image:
-    runs-on: cfa-cdcgov
-    name: Build and push image
-
-    steps:
-      - name: Login to Azure
-        id: azure_login_2
-        uses: azure/login@v2
-        with:
-          creds: ${{ secrets.MY_SERVICE_PRINCIPAL_CREDS_STRING }}
-
-      - name: Login to ACR
-        run: az acr login --name ${{ env.CONTAINER_REGISTRY_NAME }}
-        
-      - name: Build and push image
-        id: build-push
-        uses: epinowcast/actions/twostep-container-build@v1.1.0
-        with:
-          container-file-1: ./Containerfile.dependencies
-          container-file-2: ./Containerfile
-          first-step-cache-key: docker-dependencies-${{ runner.os }}-${{ hashFiles('./Containerfile.dependencies') }}
-          image: ${{ env.IMAGE_NAME }}
-          registry: $${ env.CONTAINER_REGISTRY_NAME }}.azurecr.io/
-          build-args-2: |
-            TAG=${{ steps.image.outputs.tag }}
-            GIT_COMMIT_SHA=${{ github.event.pull_request.head.sha || github.sha }}
-            GIT_BRANCH_NAME=${{ steps.branch.outputs.name }}
-```
-
 ## Example: Using ghcr.io
 
 The workflow is triggered on pull requests and pushes to the main branch. The image is pushed to `ghcr.io` and the image name is `epinowcast/actions` (full name is `ghcr.io/epinowcast/actions`). A functional version of this workflow is executed [here](../.github/workflows/test-twostep-container-build.yml).
