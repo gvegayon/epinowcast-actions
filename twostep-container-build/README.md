@@ -1,4 +1,6 @@
-# Build image in two steps: Caching dependencies
+# Build image in two steps: Caching dependencies [![Test Twostep container](https://github.com/epinowcast/actions/actions/workflows/test-twostep-container-build.yml/badge.svg)](https://github.com/epinowcast/actions/actions/workflows/test-twostep-container-build.yml)
+
+<sup>*(This action is a fork of the [CDCgov/cfa-actions/twostep-container-build](https://github.com/CDCgov/cfa-actions/tree/main/twostep-container-build) action)*</sup>
 
 This action will build a container image for a project in two steps and push the image to a container registry. During the first step, using the container file `container-file-1`, it will build and cache the image containing the dependencies of the main project. After the first step, a second build and push process happens based on the container file `container-file-2`. The `container-file-2` uses as base image the one created during the first step.
 

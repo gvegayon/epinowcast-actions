@@ -1,5 +1,7 @@
 # Post artifact as a comment [![Test PR post artifact](https://github.com/epinowcast/actions/actions/workflows/test-post-artifact.yml/badge.svg)](https://github.com/epinowcast/actions/actions/workflows/test-post-artifact.yml)
 
+<sup>*(This action is a fork of the [CDCgov/cfa-actions/post-artifact](https://github.com/CDCgov/cfa-actions/tree/main/post-artifact) action)*</sup>
+
 ## Inputs
 
 | Field         | Description                                                                                                                             | Required | Default        |
